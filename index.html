@@ -2,109 +2,117 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Malla Interactiva Abogacía UNS – Plan 2020 v2</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Malla Abogacía UNS (Plan 2020)</title>
   <style>
-    body { font-family:'Segoe UI', Tahoma, sans-serif; background:#f4f6f8; color:#333; margin:0;padding:20px;}
-    h1{text-align:center;color:#2c3e50;}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;margin-top:30px;}
-    .year-column{background:#fff;border-radius:8px;padding:15px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
-    .year-column h2{margin:0 0 6px;color:#34495e;}
-    .quarter{margin:8px 0;}
-    .quarter h3{margin:4px 0;color:#555;font-size:15px;}
-    .subject{background:#ecf0f1;margin:4px 0;padding:6px 8px;border-radius:6px;position:relative;cursor:pointer;transition:background .3s;}
-    .subject.completed{background:#a5d6a7;text-decoration:line-through;color:#2e7d32;}
-    .subject.locked{background:#e0e0e0;color:#888;cursor:not-allowed;}
-    .subject:hover::after{content:attr(data-tooltip);position:absolute;left:100%;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:4px 8px;border-radius:4px;font-size:12px;white-space:nowrap;z-index:10;}
+    body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin: 1rem; }
+    h1 { text-align: center; color: #2c3e50; }
+    .malla { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; margin-top:1rem; }
+    .anio { background: #ecf0f1; padding: 1rem; border-radius:8px; }
+    .anio h2 { text-align:center; color:#34495e; }
+    .materia { background:#fff; border:2px solid #bdc3c7; margin:0.4rem 0; padding:0.6rem; border-radius:6px; cursor:pointer; position:relative; transition:background 0.2s; }
+    .materia:hover { background:#e9f7ef; }
+    .aprobada { background:#3498db !important; color:white; border-color:#2980b9; }
+    .bloqueada { background:#dcdde1; cursor:not-allowed; }
+    .materia[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position:absolute; background:#2c3e50; color:#fff; padding:5px; border-radius:5px;
+      top:100%; left:0; white-space: pre-line; font-size:0.8rem; z-index:1;
+    }
   </style>
 </head>
 <body>
-  <h1>Malla Interactiva – Abogacía UNS (Plan 2020 v2)</h1>
-  <div class="grid" id="grid"></div>
+  <h1>Malla Abogacía UNS – Plan 2020‑2</h1>
+  <div class="malla" id="malla"></div>
   <script>
     const materias = [
       // PRIMER AÑO
-      {id:'9098', nombre:'Evolución Institucional del Derecho',anio:1,cuatri:1,deps:[]},
-      {id:'4675', nombre:'Historia Constitucional',anio:1,cuatri:1,deps:[]},
-      {id:'9001', nombre:'Introducción al Derecho',anio:1,cuatri:1,deps:[]},
-      {id:'9004', nombre:'Derecho Privado‑Parte General',anio:1,cuatri:2,deps:['9001']},
-      {id:'4758', nombre:'Introducción al Estudio de las Ciencias Sociales “D”',anio:1,cuatri:2,deps:[]},
-      {id:'2395', nombre:'Sociología',anio:1,cuatri:2,deps:[]},
-      {id:'9107', nombre:'Taller Técnicas Acceso Info Jurídica',anio:1,cuatri:2,deps:[]},
+      { id:"introEst", nombre:"Introducción a los Estudios Universitarios", anio:1 },
+      { id:"introDerecho", nombre:"Introducción al Derecho", anio:1 },
+      { id:"histPensamiento", nombre:"Historia del Derecho y del Pensamiento Político", anio:1 },
+      { id:"sociologia", nombre:"Nociones de Sociología", anio:1 },
+      { id:"histInstitucional", nombre:"Historia Institucional Argentina", anio:1 },
+      { id:"economia", nombre:"Nociones de Economía", anio:1 },
+      { id:"privadoPG", nombre:"Derecho Privado - Parte General", anio:1 },
+      { id:"cienciaPoliticaEstado", nombre:"Ciencia Política y Teoría del Estado", anio:1 },
       // SEGUNDO AÑO
-      {id:'9005', nombre:'Derecho Constitucional',anio:2,cuatri:1,deps:['4675','9001']},
-      {id:'9093', nombre:'Derechos Humanos',anio:2,cuatri:1,deps:[]},
-      {id:'2109', nombre:'Economía',anio:2,cuatri:1,deps:[]},
-      {id:'4809', nombre:'Taller Discurso Argumentativo',anio:2,cuatri:1,deps:[]},
-      {id:'9105', nombre:'Teoría del Conflicto y Métodos de Resolución',anio:2,cuatri:1,deps:[]},
-      {id:'9006', nombre:'Derecho de las Obligaciones',anio:2,cuatri:2,deps:['9004','9098']},
-      {id:'9008', nombre:'Derecho Penal I',anio:2,cuatri:2,deps:['9001','9005']},
-      {id:'9055', nombre:'Ciencia Política',anio:2,cuatri:2,deps:[]},
-      {id:'9110', nombre:'Taller Negociación y Métodos Resolución Conflictos',anio:2,cuatri:2,deps:['9105']},
+      { id:"constitucional", nombre:"Derecho Constitucional", anio:2, requisitos:["introDerecho","histPensamiento","privadoPG","cienciaPoliticaEstado"] },
+      { id:"obligaciones", nombre:"Derecho de las Obligaciones", anio:2, requisitos:["introDerecho","privadoPG"] },
+      { id:"ddhh", nombre:"Derechos Humanos y Ciudadanía", anio:2, requisitos:[] },
+      { id:"conocimientoCientifico", nombre:"Introducción al Conocimiento Científico", anio:2 },
+      { id:"contratos", nombre:"Derecho de los Contratos", anio:2, requisitos:["privadoPG"] },
+      { id:"comercialEmpresa", nombre:"Derecho Comercial y de la Empresa", anio:2, requisitos:["privadoPG"] },
+      { id:"penalGeneral", nombre:"Derecho Penal - Parte General", anio:2, requisitos:["introDerecho"] },
       // TERCER AÑO
-      {id:'9019', nombre:'Derecho de los Contratos',anio:3,cuatri:1,deps:['9004','9006']},
-      {id:'9018', nombre:'Derecho Penal II',anio:3,cuatri:1,deps:['9005','9008','9093']},
-      {id:'9104', nombre:'Derecho Procesal Civil y Comercial',anio:3,cuatri:1,deps:['9004','9006']},
-      {id:'9139', nombre:'Ética D',anio:3,cuatri:1,deps:['9001']},
-      {id:'9109', nombre:'Taller Interpretación Ley y Jurisprudencia',anio:3,cuatri:1,deps:['4809']},
-      {id:'9007', nombre:'Derecho Administrativo I',anio:3,cuatri:2,deps:['9005','9093']},
-      {id:'9101', nombre:'Derecho de Sociedades',anio:3,cuatri:2,deps:['9006']},
-      {id:'9049', nombre:'Derecho Procesal Penal',anio:3,cuatri:2,deps:['9008','9018']},
-      {id:'9010', nombre:'Derechos Reales e Intelectuales',anio:3,cuatri:2,deps:['9004','9006']},
-      {id:'9111', nombre:'Taller Litigación Oral',anio:3,cuatri:2,deps:['4809']},
+      { id:"penalEspecial", nombre:"Derecho Penal - Parte Especial", anio:3, requisitos:["penalGeneral"] },
+      { id:"procesalCivil", nombre:"Derecho Procesal Civil y Comercial", anio:3, requisitos:["privadoPG","obligaciones"] },
+      { id:"consumidor", nombre:"Derecho del Consumidor y Defensa de la Competencia", anio:3 },
+      { id:"ambiental", nombre:"Derecho Ambiental y Recursos Naturales", anio:3 },
+      { id:"derechosReales", nombre:"Derechos Reales", anio:3 },
+      { id:"filosofiaDerecho", nombre:"Filosofía del Derecho", anio:3 },
+      { id:"intPublico", nombre:"Derecho Internacional Público", anio:3 },
+      { id:"tributario", nombre:"Finanzas Públicas y Derecho Tributario", anio:3 },
       // CUARTO AÑO
-      {id:'9102', nombre:'Derecho de Daños y Seguros',anio:4,cuatri:1,deps:['9005','9019']},
-      {id:'9033', nombre:'Derecho del Trabajo y Seguridad Social “D”',anio:4,cuatri:1,deps:['9005','9019']},
-      {id:'9020', nombre:'Filosofía del Derecho',anio:4,cuatri:1,deps:['9001']},
-      {id:'9113', nombre:'Taller Derecho Procesal Administrativo',anio:4,cuatri:1,deps:['9007','9104']},
-      {id:'9106', nombre:'Derecho del Consumidor',anio:4,cuatri:2,deps:['9019']},
-      {id:'9022', nombre:'Derecho Internacional Público',anio:4,cuatri:2,deps:['9005','9093']},
-      {id:'9099', nombre:'Derecho, Economía y Comportamiento',anio:4,cuatri:2,deps:['2109','9019','9102','9104']},
-      {id:'9114', nombre:'Taller de Práctica Civil y Comercial',anio:4,cuatri:2,deps:['9104','9111']},
-      {id:'9112', nombre:'Taller de Práctica Penal',anio:4,cuatri:2,deps:['9018','9049','9111']},
-      // QUINTO AÑO (sólo académicas)
-      {id:'9012', nombre:'Derecho Administrativo II',anio:5,cuatri:1,deps:['9007','9102']},
-      {id:'9016', nombre:'Derecho de Familia y Sucesiones',anio:5,cuatri:1,deps:['9019','9101','9102','9104']},
-      {id:'9100', nombre:'Derecho Tributario',anio:5,cuatri:1,deps:['9007','9018','9104','9113']},
-      {id:'9015', nombre:'Derecho Ambiental y Recursos Naturales',anio:5,cuatri:2,deps:['9007','9019','9102','9104']},
-      {id:'9103', nombre:'Derecho Bancario',anio:5,cuatri:2,deps:['9019','9101','9104','9106']},
-      {id:'9013', nombre:'Derecho Concursal',anio:5,cuatri:2,deps:['9019','9033','9101','9104']},
-      {id:'9023', nombre:'Derecho Internacional Privado',anio:5,cuatri:2,deps:['9016','9101']},
-      {id:'9140', nombre:'Práctica Profesional Supervisada D',anio:5,cuatri:2,deps:[]}, 
-      {id:'9115', nombre:'Taller de Investigación Jurídica',anio:5,cuatri:2,deps:['9109']},
-      {id:'9116', nombre:'Taller de Práctica Profesional Supervisada',anio:5,cuatri:2,deps:[]},
-      {id:'9141', nombre:'Trabajo de Investigación Final',anio:5,cuatri:2,deps:['9115']},
-      // OPTATIVAS (puedes marcar con cuatri=0 para listarlas al final)
-      {id:'9014', nombre:'Derecho de la Navegación',anio:0,cuatri:0,deps:['9019']},
-      {id:'9082', nombre:'Filosofía de la Pena',anio:0,cuatri:0,deps:['9008']},
-      {id:'9085', nombre:'Política Criminal',anio:0,cuatri:0,deps:[]},
-      {id:'9087', nombre:'Modelos Comparados en Seguridad Ciudadana',anio:0,cuatri:0,deps:[]},
-      {id:'9090', nombre:'Legislación en Seguridad Ciudadana',anio:0,cuatri:0,deps:[]},
-      {id:'9096', nombre:'Ejecución Penal',anio:0,cuatri:0,deps:['9008','9049']},
-      {id:'9117', nombre:'Criminología',anio:0,cuatri:0,deps:[]},
-      {id:'9119', nombre:'Derecho de la Integración',anio:0,cuatri:0,deps:['9022']},
-      {id:'9120', nombre:'Derecho Administrativo Parte Especial',anio:0,cuatri:0,deps:['9007']},
-      {id:'9121', nombre:'Derecho de Seguros',anio:0,cuatri:0,deps:['9102']},
-      {id:'9122', nombre:'Derecho Notarial',anio:0,cuatri:0,deps:['9010']},
-      {id:'9123', nombre:'Derecho Cooperativo',anio:0,cuatri:0,deps:['9004']},
-      {id:'9124', nombre:'Garantías Bancarias y Mercado de Capitales',anio:0,cuatri:0,deps:['9019','9101']},
-      {id:'9125', nombre:'Derecho Internacional Privado II',anio:0,cuatri:0,deps:['9016','9018','9101']},
-      {id:'9126', nombre:'Derecho Aeronáutico',anio:0,cuatri:0,deps:['9019']},
-      {id:'9127', nombre:'Derecho de la Salud',anio:0,cuatri:0,deps:['9019']},
-      {id:'9129', nombre:'Derecho Ambiental II',anio:0,cuatri:0,deps:['9007','9019','9102','9104']},
-      {id:'9131', nombre:'Taller Procedimiento Laboral',anio:0,cuatri:0,deps:['9033']},
-      {id:'9132', nombre:'Taller Proceso de Daños',anio:0,cuatri:0,deps:['9102']},
-      {id:'9133', nombre:'Taller Técnica Legislativa',anio:0,cuatri:0,deps:['9005']},
-      {id:'9134', nombre:'Taller Litigación Oral en DDHH',anio:0,cuatri:0,deps:['9049','9111']},
-      {id:'9138', nombre:'Perspectivas de Género en Políticas de Seguridad',anio:0,cuatri:0,deps:[]},
-      {id:'9142', nombre:'Arbitraje Comercial Int y DPI Penal Económico',anio:0,cuatri:0,deps:['9018','9019','9104']},
-      {id:'9143', nombre:'Derecho y Nuevas Tecnologías',anio:0,cuatri:0,deps:['9004']},
-      {id:'9144', nombre:'Derecho Penal Internacional',anio:0,cuatri:0,deps:['9008','9018','9022']},
-      {id:'9145', nombre:'Cuestiones sobre Autoría y Participación en DP',anio:0,cuatri:0,deps:['9008','9018']},
-      {id:'9146', nombr… // truncado por límite, sigue completando mismas  condiciones
+      { id:"familias", nombre:"Derecho de las Familias", anio:4 },
+      { id:"procesalPenal", nombre:"Derecho Procesal Penal", anio:4 },
+      { id:"personasJuridicas", nombre:"Derecho de las Personas Jurídicas", anio:4 },
+      { id:"trabajoSegSocial", nombre:"Derecho del Trabajo y Seguridad Social", anio:4 },
+      { id:"administrativo", nombre:"Derecho Administrativo", anio:4 },
+      { id:"sucesiones", nombre:"Derecho de las Sucesiones", anio:4 },
+      { id:"procesalConst", nombre:"Derecho Procesal Constitucional y Derechos Humanos", anio:4 },
+      { id:"eticaProf", nombre:"Ética Profesional", anio:4 },
+      { id:"practicaCivil", nombre:"Práctica de Procesos Civiles y Comerciales", anio:4 },
+      // QUINTO AÑO
+      { id:"intPrivado", nombre:"Derecho Internacional Privado", anio:5 },
+      { id:"procedAdmin", nombre:"Procedimiento Administrativo", anio:5 },
+      { id:"tfe1", nombre:"Trayecto Formación Específica 1", anio:5 },
+      { id:"concursal", nombre:"Derecho Concursal", anio:5 },
+      { id:"practicaPenal", nombre:"Práctica de Procesos Penales", anio:5 },
+      { id:"tfe2", nombre:"Trayecto Formación Específica 2", anio:5 },
+      { id:"practicaProf", nombre:"Práctica Profesional", anio:5 },
+      { id:"optativas", nombre:"Optativas / Electivas", anio:5 },
+      { id:"idioma", nombre:"Idioma", anio:5 }
     ];
-    // (Script de render, localStorage y lógica es el mismo que antes)
-    // ...
+
+    const aprobadas = JSON.parse(localStorage.getItem("aprobadasAbogUNS"))||[];
+
+    function guardar() { localStorage.setItem("aprobadasAbogUNS", JSON.stringify(aprobadas)); }
+
+    function crearMalla(){
+      const cont = document.getElementById("malla");
+      for (let i=1;i<=5;i++){
+        const col = document.createElement("div"); col.className="anio";
+        col.innerHTML=<h2>${i}º Año</h2>;
+        materias.filter(m=>m.anio===i).forEach(m=>{
+          const d = document.createElement("div"); d.className="materia";
+          d.textContent = m.nombre; d.id = m.id;
+          col.appendChild(d);
+        });
+        cont.appendChild(col);
+      }
+    }
+
+    function actualizar(){
+      materias.forEach(m=>{
+        const el=document.getElementById(m.id);
+        el.className="materia"; el.removeAttribute("data-tooltip");
+        const aprob = aprobadas.includes(m.id);
+        const reqOK = !m.requisitos || m.requisitos.every(r=>aprobadas.includes(r));
+        if (aprob) el.classList.add("aprobada");
+        else if (!reqOK) {
+          el.classList.add("bloqueada");
+          const falt = m.requisitos.filter(r=>!aprobadas.includes(r))
+            .map(id=> materias.find(x=>x.id===id).nombre ).join("\n");
+          el.setAttribute("data-tooltip", "Falta:\n"+falt);
+        }
+        el.onclick = () => {
+          if (!reqOK) return;
+          aprob ? aprobadas.splice(aprobadas.indexOf(m.id),1) : aprobadas.push(m.id);
+          guardar(); actualizar();
+        };
+      });
+    }
+
+    crearMalla(); actualizar();
   </script>
 </body>
 </html>
