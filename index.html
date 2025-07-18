@@ -1,118 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Malla Abogacía UNS (Plan 2020)</title>
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin: 1rem; }
-    h1 { text-align: center; color: #2c3e50; }
-    .malla { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; margin-top:1rem; }
-    .anio { background: #ecf0f1; padding: 1rem; border-radius:8px; }
-    .anio h2 { text-align:center; color:#34495e; }
-    .materia { background:#fff; border:2px solid #bdc3c7; margin:0.4rem 0; padding:0.6rem; border-radius:6px; cursor:pointer; position:relative; transition:background 0.2s; }
-    .materia:hover { background:#e9f7ef; }
-    .aprobada { background:#3498db !important; color:white; border-color:#2980b9; }
-    .bloqueada { background:#dcdde1; cursor:not-allowed; }
-    .materia[data-tooltip]:hover::after {
-      content: attr(data-tooltip);
-      position:absolute; background:#2c3e50; color:#fff; padding:5px; border-radius:5px;
-      top:100%; left:0; white-space: pre-line; font-size:0.8rem; z-index:1;
-    }
-  </style>
-</head>
-<body>
-  <h1>Malla Abogacía UNS – Plan 2020‑2</h1>
-  <div class="malla" id="malla"></div>
-  <script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- Mismo código aquí ---
     const materias = [
-      // PRIMER AÑO
-      { id:"introEst", nombre:"Introducción a los Estudios Universitarios", anio:1 },
-      { id:"introDerecho", nombre:"Introducción al Derecho", anio:1 },
-      { id:"histPensamiento", nombre:"Historia del Derecho y del Pensamiento Político", anio:1 },
-      { id:"sociologia", nombre:"Nociones de Sociología", anio:1 },
-      { id:"histInstitucional", nombre:"Historia Institucional Argentina", anio:1 },
-      { id:"economia", nombre:"Nociones de Economía", anio:1 },
-      { id:"privadoPG", nombre:"Derecho Privado - Parte General", anio:1 },
-      { id:"cienciaPoliticaEstado", nombre:"Ciencia Política y Teoría del Estado", anio:1 },
-      // SEGUNDO AÑO
-      { id:"constitucional", nombre:"Derecho Constitucional", anio:2, requisitos:["introDerecho","histPensamiento","privadoPG","cienciaPoliticaEstado"] },
-      { id:"obligaciones", nombre:"Derecho de las Obligaciones", anio:2, requisitos:["introDerecho","privadoPG"] },
-      { id:"ddhh", nombre:"Derechos Humanos y Ciudadanía", anio:2, requisitos:[] },
-      { id:"conocimientoCientifico", nombre:"Introducción al Conocimiento Científico", anio:2 },
-      { id:"contratos", nombre:"Derecho de los Contratos", anio:2, requisitos:["privadoPG"] },
-      { id:"comercialEmpresa", nombre:"Derecho Comercial y de la Empresa", anio:2, requisitos:["privadoPG"] },
-      { id:"penalGeneral", nombre:"Derecho Penal - Parte General", anio:2, requisitos:["introDerecho"] },
-      // TERCER AÑO
-      { id:"penalEspecial", nombre:"Derecho Penal - Parte Especial", anio:3, requisitos:["penalGeneral"] },
-      { id:"procesalCivil", nombre:"Derecho Procesal Civil y Comercial", anio:3, requisitos:["privadoPG","obligaciones"] },
-      { id:"consumidor", nombre:"Derecho del Consumidor y Defensa de la Competencia", anio:3 },
-      { id:"ambiental", nombre:"Derecho Ambiental y Recursos Naturales", anio:3 },
-      { id:"derechosReales", nombre:"Derechos Reales", anio:3 },
-      { id:"filosofiaDerecho", nombre:"Filosofía del Derecho", anio:3 },
-      { id:"intPublico", nombre:"Derecho Internacional Público", anio:3 },
-      { id:"tributario", nombre:"Finanzas Públicas y Derecho Tributario", anio:3 },
-      // CUARTO AÑO
-      { id:"familias", nombre:"Derecho de las Familias", anio:4 },
-      { id:"procesalPenal", nombre:"Derecho Procesal Penal", anio:4 },
-      { id:"personasJuridicas", nombre:"Derecho de las Personas Jurídicas", anio:4 },
-      { id:"trabajoSegSocial", nombre:"Derecho del Trabajo y Seguridad Social", anio:4 },
-      { id:"administrativo", nombre:"Derecho Administrativo", anio:4 },
-      { id:"sucesiones", nombre:"Derecho de las Sucesiones", anio:4 },
-      { id:"procesalConst", nombre:"Derecho Procesal Constitucional y Derechos Humanos", anio:4 },
-      { id:"eticaProf", nombre:"Ética Profesional", anio:4 },
-      { id:"practicaCivil", nombre:"Práctica de Procesos Civiles y Comerciales", anio:4 },
-      // QUINTO AÑO
-      { id:"intPrivado", nombre:"Derecho Internacional Privado", anio:5 },
-      { id:"procedAdmin", nombre:"Procedimiento Administrativo", anio:5 },
-      { id:"tfe1", nombre:"Trayecto Formación Específica 1", anio:5 },
-      { id:"concursal", nombre:"Derecho Concursal", anio:5 },
-      { id:"practicaPenal", nombre:"Práctica de Procesos Penales", anio:5 },
-      { id:"tfe2", nombre:"Trayecto Formación Específica 2", anio:5 },
-      { id:"practicaProf", nombre:"Práctica Profesional", anio:5 },
-      { id:"optativas", nombre:"Optativas / Electivas", anio:5 },
-      { id:"idioma", nombre:"Idioma", anio:5 }
+      { id:'9001', nombre:'Introducción al Derecho', anio:1, cuatri:1, deps:[] },
+      { id:'9004', nombre:'Derecho Privado General', anio:1, cuatri:2, deps:['9001'] },
+      { id:'9005', nombre:'Derecho Constitucional', anio:2, cuatri:1, deps:['9001'] },
+      { id:'9006', nombre:'Derecho de las Obligaciones', anio:2, cuatri:2, deps:['9004'] },
     ];
 
-    const aprobadas = JSON.parse(localStorage.getItem("aprobadasAbogUNS"))||[];
+    const aprobadas = JSON.parse(localStorage.getItem('aprobadas') || '[]');
 
-    function guardar() { localStorage.setItem("aprobadasAbogUNS", JSON.stringify(aprobadas)); }
+    function toggleAprobada(id) {
+      const idx = aprobadas.indexOf(id);
+      if (idx >= 0) {
+        aprobadas.splice(idx, 1);
+      } else {
+        aprobadas.push(id);
+      }
+      localStorage.setItem('aprobadas', JSON.stringify(aprobadas));
+      render();
+    }
 
-    function crearMalla(){
-      const cont = document.getElementById("malla");
-      for (let i=1;i<=5;i++){
-        const col = document.createElement("div"); col.className="anio";
-        col.innerHTML=<h2>${i}º Año</h2>;
-        materias.filter(m=>m.anio===i).forEach(m=>{
-          const d = document.createElement("div"); d.className="materia";
-          d.textContent = m.nombre; d.id = m.id;
-          col.appendChild(d);
+    function render() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      for (let anio = 1; anio <= 5; anio++) {
+        const col = document.createElement('div');
+        col.className = 'year-column';
+        col.innerHTML = `<h2>${anio}° Año</h2>`;
+        materias.filter(m => m.anio === anio).forEach(mat => {
+          const div = document.createElement('div');
+          div.className = 'subject';
+          if (aprobadas.includes(mat.id)) div.classList.add('completed');
+          div.textContent = mat.nombre;
+          div.onclick = () => toggleAprobada(mat.id);
+          col.appendChild(div);
         });
-        cont.appendChild(col);
+        grid.appendChild(col);
       }
     }
 
-    function actualizar(){
-      materias.forEach(m=>{
-        const el=document.getElementById(m.id);
-        el.className="materia"; el.removeAttribute("data-tooltip");
-        const aprob = aprobadas.includes(m.id);
-        const reqOK = !m.requisitos || m.requisitos.every(r=>aprobadas.includes(r));
-        if (aprob) el.classList.add("aprobada");
-        else if (!reqOK) {
-          el.classList.add("bloqueada");
-          const falt = m.requisitos.filter(r=>!aprobadas.includes(r))
-            .map(id=> materias.find(x=>x.id===id).nombre ).join("\n");
-          el.setAttribute("data-tooltip", "Falta:\n"+falt);
-        }
-        el.onclick = () => {
-          if (!reqOK) return;
-          aprob ? aprobadas.splice(aprobadas.indexOf(m.id),1) : aprobadas.push(m.id);
-          guardar(); actualizar();
-        };
-      });
-    }
-
-    crearMalla(); actualizar();
-  </script>
-</body>
-</html>
+    render();
+  });
+</script>
